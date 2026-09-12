@@ -1,0 +1,174 @@
+{
+  "counts": {
+    "fn": 800,
+    "fp": 1879,
+    "tp": 756
+  },
+  "recall_by_hallucination_type": {
+    "Evident Conflict": {
+      "n": 626,
+      "recall": 0.4696485623003195
+    },
+    "Subtle Conflict": {
+      "n": 16,
+      "recall": 0.3125
+    },
+    "Subtle Baseless Info": {
+      "n": 174,
+      "recall": 0.47701149425287354
+    },
+    "Evident Baseless Info": {
+      "n": 878,
+      "recall": 0.530751708428246
+    }
+  },
+  "avg_claim_len_words": {
+    "fn": 11.39125,
+    "tp": 11.313492063492063,
+    "fp": 11.522618414050026
+  },
+  "examples": {
+    "false_negative_examples": [
+      {
+        "sentence": "They offer free WiFi and takeout, and are open seven days a week.",
+        "types": [
+          "Evident Baseless Info"
+        ],
+        "top_evidence": [
+          "attributes:  > WiFi: free"
+        ],
+        "score": 0.20619911088577048
+      },
+      {
+        "sentence": "Therefore, hugging has several positive psychological effects, including reducing stress and anxiety, improving mood and well-being, enhancing empathy and listening skills, and soothing existential fears.",
+        "types": [
+          "Evident Baseless Info"
+        ],
+        "top_evidence": [
+          "passage 2:Empathy and Listening Skills."
+        ],
+        "score": 0.20586250679574175
+      },
+      {
+        "sentence": "On February 27, a man riding his bike found her purse near a bridge, containing her phone, wallet, and keys.",
+        "types": [
+          "Evident Baseless Info"
+        ],
+        "top_evidence": [
+          "Tonee's Belongings Located, But The Mystery Remains\nAccording to reports, a man riding his bike discovered Tonee's purse near a bridge."
+        ],
+        "score": 0.20561809644761483
+      },
+      {
+        "sentence": "The restaurant accepts reservations and has a casual, trendy ambiance.",
+        "types": [
+          "Evident Conflict",
+          "Evident Conflict"
+        ],
+        "top_evidence": [
+          "attributes:  > Ambience:  > trendy: False"
+        ],
+        "score": 0.2047335626109217
+      },
+      {
+        "sentence": "Weight loss: Jalapenos can aid in weight loss due to their spicy nature, which can increase metabolism and burn calories (Passage 2).",
+        "types": [
+          "Subtle Baseless Info"
+        ],
+        "top_evidence": [
+          "2  A spicy weight loss alternative."
+        ],
+        "score": 0.2045013187075813
+      }
+    ],
+    "false_positive_examples": [
+      {
+        "sentence": "It's worth noting that the restaurant's business listing does not mention anything about a closure, so it's possible that the reviewer's information may be outdated or incorrect.",
+        "top_evidence": [
+          "name: Ming Dynasty Restaurant"
+        ],
+        "score": 0.2064540660278179
+      },
+      {
+        "sentence": "The case is significant because it highlights the importance of accurate reporting and the potential consequences of spreading false information.",
+        "top_evidence": [
+          "The UVA situation is not your run-of-the-mill defamation case."
+        ],
+        "score": 0.2064592425638842
+      },
+      {
+        "sentence": "Based on the provided passages, here are some traits associated with people born in October:\n\n* Interest in form and structure (Passage 1)\n* Success-oriented, charming, and personally powerful individuals (Passage 2)\n* Crave stability and security (Passage 3)\n\nIt's important to note that these are generalizations and may not apply to every individual born in October.",
+        "top_evidence": [
+          "If You Were Born Today, October 1: You are a success-oriented, charming, and personally powerful individual."
+        ],
+        "score": 0.20654604147114408
+      },
+      {
+        "sentence": "With a rating of 4.5 stars, the restaurant offers a unique fusion of traditional Thai and Taiwanese cuisine with modern twists.",
+        "top_evidence": [
+          "categories: Restaurants, Asian Fusion, Thai, Taiwanese, Noodles"
+        ],
+        "score": 0.2066059201116305
+      },
+      {
+        "sentence": "They offer outdoor seating, free WiFi, and takeout services.",
+        "top_evidence": [
+          "attributes:  > WiFi: free"
+        ],
+        "score": 0.20666507868289463
+      }
+    ],
+    "true_positive_examples": [
+      {
+        "sentence": "This process continues until the customer's account is debited no more than five times within a 24-hour period.",
+        "types": [
+          "Evident Baseless Info"
+        ],
+        "top_evidence": [
+          "As your vehicle passes through, your E-ZPass\u00ae account is charged the proper amount."
+        ],
+        "score": 0.8631055421639968
+      },
+      {
+        "sentence": "It should reach an internal temperature of 130\u00b0F to 135\u00b0F for medium-rare, 140\u00b0F to 145\u00b0F for medium, and 150\u00b0F to 155\u00b0F for medium-well.",
+        "types": [
+          "Evident Baseless Info"
+        ],
+        "top_evidence": [
+          "Allow roast to stand at room temperature for at least 1 hour."
+        ],
+        "score": 0.807818827076512
+      },
+      {
+        "sentence": "Political system: Vietnam has been ruled by the Communist Party since 1976, while India has been a democracy since its independence in 1947.",
+        "types": [
+          "Evident Baseless Info"
+        ],
+        "top_evidence": [
+          "passage 2:India supported Vietnam's independence from France, opposed American involvement in the Vietnam War, and supported unification of Vietnam."
+        ],
+        "score": 0.7914837732627231
+      },
+      {
+        "sentence": "Cook for 4-5 minutes per side, or until the internal temperature reaches your desired doneness (unspecified in passages)\n8.",
+        "types": [
+          "Evident Baseless Info"
+        ],
+        "top_evidence": [
+          "The bone gives both cuts tremendous flavor and when cooked just right, you won\u2019t find a better steak."
+        ],
+        "score": 0.762271298924858
+      },
+      {
+        "sentence": "Use travel apps: Utilize travel apps like Google Maps or Rome2rio to plan your itinerary and navigate through German cities.",
+        "types": [
+          "Evident Baseless Info"
+        ],
+        "top_evidence": [
+          "Get discounts and save money in Germany, from bargain flights to Germany, and cheap hotels and hostels in Germany, to restaurants, public transportation, and sightseeing in German cities.efore you go to Germany, check out these helpful Germany travel tips, from visa requirements, when and where to go in Germany, what to see in Germany, to getting around in Germany and budget travel tips."
+        ],
+        "score": 0.7620424828710968
+      }
+    ]
+  }
+}

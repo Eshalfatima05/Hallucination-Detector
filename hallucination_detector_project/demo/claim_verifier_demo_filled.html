@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Claim Ledger - Hallucination Verification Demo</title>
+<style>
+  :root{
+    --paper:#F3F4F0;
+    --paper-raised:#FFFFFF;
+    --ink:#1B2430;
+    --ink-soft:#5B6472;
+    --rule:#D8DAD3;
+    --flag:#A83A3A;
+    --flag-bg:#F7E9E7;
+    --ok:#3D6B54;
+    --ok-bg:#E7EEE9;
+    --amber:#93641D;
+    --mono: 'JetBrains Mono', 'SF Mono', Menlo, Consolas, monospace;
+    --serif: 'Source Serif 4', 'Iowan Old Style', Georgia, serif;
+    --sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; background:var(--paper); color:var(--ink);
+    font-family:var(--sans); -webkit-font-smoothing:antialiased;
+    padding: 18px 14px 40px;
+  }
+  .wrap{max-width:640px; margin:0 auto;}
+
+  header{ margin-bottom:20px; }
+  .kicker{
+    font-family:var(--mono); font-size:11px; letter-spacing:.04em;
+    color:var(--ink-soft); margin:0 0 6px;
+  }
+  h1{
+    font-family:var(--serif); font-weight:600; font-size:26px;
+    line-height:1.15; margin:0 0 8px; letter-spacing:-0.01em;
+  }
+  .sub{ color:var(--ink-soft); font-size:14px; line-height:1.5; max-width:52ch; }
+
+  .stats{
+    display:grid; grid-template-columns:repeat(3,1fr); gap:1px;
+    background:var(--rule); border:1px solid var(--rule); border-radius:10px;
+    overflow:hidden; margin:18px 0 22px;
+  }
+  .stat{ background:var(--paper-raised); padding:12px 10px; text-align:left; }
+  .stat b{
+    display:block; font-family:var(--serif); font-size:22px; font-weight:600;
+    line-height:1;
+  }
+  .stat span{ display:block; font-size:11px; color:var(--ink-soft); margin-top:5px; }
+
+  .tabs{ display:flex; gap:6px; margin-bottom:14px; flex-wrap:wrap; }
+  .tab{
+    font-family:var(--sans); font-size:12.5px; padding:7px 12px;
+    border-radius:20px; border:1px solid var(--rule); background:var(--paper-raised);
+    color:var(--ink-soft); cursor:pointer;
+  }
+  .tab.active{ background:var(--ink); color:var(--paper); border-color:var(--ink); }
+  .tab-meta{ font-family:var(--mono); font-size:10.5px; opacity:.7; margin-left:5px;}
+
+  .doc{
+    background:var(--paper-raised); border:1px solid var(--rule); border-radius:12px;
+    padding:20px 18px; font-family:var(--serif); font-size:16.5px; line-height:1.62;
+  }
+  .doc-label{
+    font-family:var(--mono); font-size:10.5px; color:var(--ink-soft);
+    letter-spacing:.03em; margin-bottom:12px;
+  }
+  .claim{ cursor:pointer; border-radius:3px; padding:0 1px; transition:background .12s; }
+  .claim.flagged{ text-decoration: underline wavy var(--flag); text-decoration-thickness:1.5px; text-underline-offset:3px;}
+  .claim.selected{ background:#EDEBDD; }
+  .claim:hover{ background:#EFEEE6; }
+
+  .panel{ margin-top:14px; }
+  .card{
+    background:var(--paper-raised); border:1px solid var(--rule); border-radius:12px;
+    padding:16px; margin-bottom:10px;
+  }
+  .verdict-row{ display:flex; align-items:center; gap:8px; margin-bottom:10px; flex-wrap:wrap; }
+  .badge{
+    font-family:var(--mono); font-size:11px; padding:3px 9px; border-radius:20px;
+    font-weight:600;
+  }
+  .badge.pred-flag{ background:var(--flag-bg); color:var(--flag); }
+  .badge.pred-ok{ background:var(--ok-bg); color:var(--ok); }
+  .badge.gold{ background:#EFEEE6; color:var(--ink-soft); font-weight:500; }
+
+  .score-bar{
+    height:6px; background:var(--rule); border-radius:4px; overflow:hidden; margin:10px 0 4px;
+  }
+  .score-fill{ height:100%; background:var(--flag); }
+  .score-label{ font-family:var(--mono); font-size:10.5px; color:var(--ink-soft); }
+
+  .claim-text{ font-family:var(--serif); font-size:15px; line-height:1.5; margin:2px 0 12px; }
+
+  .evidence-label{
+    font-family:var(--mono); font-size:10.5px; color:var(--ink-soft);
+    letter-spacing:.03em; margin-bottom:6px;
+  }
+  .evidence{
+    font-family:var(--mono); font-size:12px; line-height:1.55; color:var(--ink);
+    background:var(--paper); border-left:2px solid var(--rule); padding:8px 10px;
+    margin-bottom:6px; border-radius:0 6px 6px 0;
+  }
+
+  .agree{ font-size:12px; color:var(--ink-soft); margin-top:8px; }
+  .agree b{ color:var(--ok); }
+  .agree.miss b{ color:var(--flag); }
+
+  footer{
+    margin-top:26px; font-size:11.5px; color:var(--ink-soft); line-height:1.6;
+    border-top:1px solid var(--rule); padding-top:14px;
+  }
+  footer code{ font-family:var(--mono); background:#EAE9E1; padding:1px 5px; border-radius:4px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <p class="kicker">CLAIM-LEVEL HALLUCINATION DETECTION - LIVE DEMO</p>
+    <h1>Claim Ledger</h1>
+    <p class="sub">Every sentence a model writes, checked against its own source. Wavy underlines mark claims the detector flags as ungrounded. Tap a sentence to see the evidence it was scored against.</p>
+  </header>
+
+  <div class="stats" id="stats"></div>
+
+  <div class="tabs" id="tabs"></div>
+
+  <div class="doc">
+    <div class="doc-label" id="docLabel"></div>
+    <div id="docBody"></div>
+  </div>
+
+  <div class="panel" id="panel"></div>
+
+  <footer>
+    Detector: gradient-boosted classifier over retrieval + lexical grounding features (TF-IDF support, novel-word ratio, numeric/entity consistency), trained on RAGTruth's train split, evaluated here on its held-out test split. Test set claim-level F1 = <code>0.36</code> (AUC <code>0.79</code>) against human-annotated hallucination spans. Examples above are real model outputs from RAGTruth, unedited.
+  </footer>
+
+</div>
+
+<script>
+const DATA = [{"label": "Weather Q&A", "task_type": "QA", "claims": [{"sentence": "Typical weather in Indiana:\n\nIndianapolis, Indiana experiences a hot, humid climate with long, warm summers and chilly, windy winters.", "gold": 0, "pred": 0, "score": 0.034, "types": [], "evidence": ["Hot, Humid Weather in Indiana", "In Indianapolis, the summers are long, warm, humid, and wet; the winters are chilly and windy; and it is partly cloudy year round."]}, {"sentence": "The temperature ranges from 22\u00b0F to 85\u00b0F throughout the year, with an average annual temperature of 61\u00b0F.", "gold": 1, "pred": 1, "score": 0.41, "types": ["Evident Baseless Info"], "evidence": ["Over the course of the year, the temperature typically varies from 22\u00b0F to 85\u00b0F and is rarely below 3\u00b0F or above 92\u00b0F.", "passage 2:Average Weather in Indianapolis Indiana, United States."]}, {"sentence": "Precipitation is also common in Indiana, with the wettest year recorded in 1876 at Indianapolis, measuring 57.65 inches of rain.", "gold": 0, "pred": 0, "score": 0.049, "types": [], "evidence": ["passage 3:Wettest year was recorded in 1876 at Indianapolis : 57.65 inches of measured rain.", "1  Driest year was recorded in 1934 at Indianapolis : 24.97 inches of measured rain."]}, {"sentence": "However, the driest year was recorded in 1934, with only 24.97 inches of rain.", "gold": 0, "pred": 0, "score": 0.026, "types": [], "evidence": ["1  Driest year was recorded in 1934 at Indianapolis : 24.97 inches of measured rain.", "passage 3:Wettest year was recorded in 1876 at Indianapolis : 57.65 inches of measured rain."]}]}, {"label": "Restaurant summary", "task_type": "Data2txt", "claims": [{"sentence": "Pizza Mizza is an Italian restaurant located in Santa Barbara, California, known for its food delivery services.", "gold": 0, "pred": 0, "score": 0.032, "types": [], "evidence": ["categories: Food Delivery Services, Food, Restaurants, Pizza, Italian", "name: Pizza Mizza"]}, {"sentence": "The restaurant offers a variety of pizzas, pastas, salads, and more, with numerous choices and sizes, including gluten-free and cauliflower crust options.", "gold": 0, "pred": 0, "score": 0.041, "types": [], "evidence": ["review_info: [1]  > review_text: This pizza place is pretty average. They have a huge list of different kinds of pizzas, pastas, salads, and more! I recently tried to call an order in to pick up but was told they only do delivery right now so I ended up just doing delivery. I couldn't decide what to order with all of their different choices and sizes! They even have cauliflower and gluten free crust options!", "attributes:  > WiFi: free"]}, {"sentence": "It is open from 11:00 to 21:00 on Mondays and Sundays and has a casual ambiance.", "gold": 0, "pred": 0, "score": 0.156, "types": [], "evidence": ["hours:  > Sunday: 11:0-21:0", "hours:  > Monday: 11:0-21:0"]}, {"sentence": "The restaurant offers free Wi-Fi, outdoor seating, and is good for groups, but does not provide music.", "gold": 1, "pred": 1, "score": 0.248, "types": ["Evident Baseless Info"], "evidence": ["attributes:  > WiFi: free", "The food is so good that I would've given this place 5 stars but unfortunately, the staff is a big miss. Maybe management should train their staff again or hire people who actually care about their job."]}, {"sentence": "However, the restaurant has a rating of 3.5 stars, with some customers praising the quality of the food, but criticizing the length of time it takes for food to arrive and the level of customer service.", "gold": 0, "pred": 0, "score": 0.065, "types": [], "evidence": ["As for customer service here...", "categories: Food Delivery Services, Food, Restaurants, Pizza, Italian"]}, {"sentence": "The restaurant also offers takeout and has a parking lot, but does not offer street parking, valet, or validated parking.", "gold": 0, "pred": 0, "score": 0.166, "types": [], "evidence": ["attributes:  > BusinessParking:  > street: False", "attributes:  > BusinessParking:  > validated: False"]}]}, {"label": "News summary", "task_type": "Summary", "claims": [{"sentence": "Boston Marathon bomber Dzhokhar Tsarnaev has been found guilty on all counts and now faces the death penalty.", "gold": 0, "pred": 0, "score": 0.056, "types": [], "evidence": ["Now that he has been found guilty on every count, the jury must decide whether Boston Marathon bomber Tsarnaev, 21, should live or die for what he has done.", "\"This is Dzhokhar Tsarnaev, unconcerned, unrepentant and unchanged,\" Pellegrini said."]}, {"sentence": "During the sentencing phase, the jury heard heart-wrenching testimony from the families of the four people killed in the attack, as well as from those who were injured.", "gold": 0, "pred": 0, "score": 0.049, "types": [], "evidence": ["Tsarnaev saw the people he killed as \"the enemy,\" she said.", "The people who were maimed by Tsarnaev's bombs are also testifying during the sentencing phase of the trial as prosecutors try to show the impact on victims of the attacks."]}, {"sentence": "The victims' families shared stories of their loved ones and the impact their loss has had on their lives.", "gold": 0, "pred": 0, "score": 0.127, "types": [], "evidence": ["To understand the toll Tsarnaev's bombs took, jurors must know the stories of his victims, the prosecutor said.", "\"These young women, this young man and this little boy, all of them were loved and they loved in return,\" Pellegrini said."]}, {"sentence": "Survivors of the bombing also testified, describing the horrific injuries they sustained and the long road to recovery they have faced.", "gold": 0, "pred": 0, "score": 0.17, "types": [], "evidence": ["But on Tuesday, jurors also began to hear about the holes his bombs left in the hearts of the survivors and the families of the dead.", "The stories they told on the witness stand were even more gripping and horrific than the stories told during the guilt phase of Tsarnaev's trial."]}, {"sentence": "Prosecutors presented evidence that Tsarnaev showed no remorse for his actions and referred to the people he killed as \"the enemy.\"", "gold": 0, "pred": 0, "score": 0.074, "types": [], "evidence": ["Tsarnaev saw the people he killed as \"the enemy,\" she said.", "The people who were maimed by Tsarnaev's bombs are also testifying during the sentencing phase of the trial as prosecutors try to show the impact on victims of the attacks."]}, {"sentence": "The defense argues that Tsarnaev's brother, who was also involved in the bombing, was the mastermind behind the attack and that Tsarnaev should not receive the death penalty.", "gold": 1, "pred": 1, "score": 0.278, "types": ["Evident Baseless Info"], "evidence": ["Opinion: What Tsarnaev deserves.", "Her husband bent over her and told her it was a terrorist attack."]}, {"sentence": "The jury must now decide whether Tsarnaev should be sentenced to death or life in prison without parole.", "gold": 0, "pred": 0, "score": 0.083, "types": [], "evidence": ["\"Can I get on with my life?", "Now that he has been found guilty on every count, the jury must decide whether Boston Marathon bomber Tsarnaev, 21, should live or die for what he has done."]}]}];
+const METRICS = {"model_selection": {"logreg": {"val_f1": 0.34735099337748343, "threshold": 0.5802505559270648}, "gboost": {"val_f1": 0.41024498886414257, "threshold": 0.20644188878281303}}, "selected_model": "gboost", "threshold": 0.20644188878281303, "claim_level_test": {"precision": 0.2869070208728653, "recall": 0.48586118251928023, "f1": 0.360773085182534, "auc": 0.7920464033846297, "n_test_claims": 17975, "n_positive": 1556}, "response_level_test": {"n_responses": 2675, "precision": 0.5510046367851623, "recall": 0.7560975609756098, "f1": 0.6374608851139919, "pct_flagged_gold": 0.3525233644859813, "pct_flagged_pred": 0.4837383177570094}, "per_task_type": {"Summary": {"n": 4821, "precision": 0.2468354430379747, "recall": 0.1511627906976744, "f1": 0.1875, "positive_rate": 0.053515868077162417}, "QA": {"n": 5175, "precision": 0.3079019073569482, "recall": 0.6174863387978142, "f1": 0.4109090909090909, "positive_rate": 0.07072463768115941}, "Data2txt": {"n": 7979, "precision": 0.2816982214572576, "recall": 0.526824034334764, "f1": 0.3671028037383178, "positive_rate": 0.11680661737059782}}, "feature_importance": {"novel_word_ratio": 0.4568416741950809, "position_ratio": 0.10972531265290178, "num_mismatch_ratio": 0.10790713423087021, "claim_len_words": 0.08292421659549853, "is_qa": 0.06868455720822342, "mean_top3_sim": 0.06237773616025939, "max_sim": 0.05331110419607589, "cap_mismatch_ratio": 0.02696373104034257, "is_summary": 0.012838482458600114, "is_data2txt": 0.010919091562583534, "has_caps": 0.003957820630587362, "has_numbers": 0.003549139068976237}};
+
+let activeIdx = 0;
+let selectedClaim = null;
+
+function renderStats(){
+  const c = METRICS.claim_level_test;
+  const r = METRICS.response_level_test;
+  const stats = [
+    { big: (c.f1*100).toFixed(0)+'%', label: 'Claim-level F1 (hallucination class)' },
+    { big: (r.recall*100).toFixed(0)+'%', label: 'Responses with ≥1 hallucination, caught' },
+    { big: (c.n_positive).toLocaleString(), label: 'Hallucinated sentences in test set' },
+  ];
+  document.getElementById('stats').innerHTML = stats.map(s =>
+    `<div class="stat"><b>${s.big}</b><span>${s.label}</span></div>`
+  ).join('');
+}
+
+function renderTabs(){
+  document.getElementById('tabs').innerHTML = DATA.map((ex, i) => {
+    const nFlag = ex.claims.filter(c => c.gold === 1).length;
+    return `<div class="tab ${i===activeIdx?'active':''}" data-i="${i}">${ex.label}<span class="tab-meta">${ex.task_type}</span></div>`;
+  }).join('');
+  document.querySelectorAll('.tab').forEach(t => {
+    t.addEventListener('click', () => { activeIdx = +t.dataset.i; selectedClaim = null; renderAll(); });
+  });
+}
+
+function renderDoc(){
+  const ex = DATA[activeIdx];
+  document.getElementById('docLabel').textContent = `SAMPLE MODEL OUTPUT - ${ex.task_type} TASK`;
+  document.getElementById('docBody').innerHTML = ex.claims.map((c, i) => {
+    const flagged = c.pred === 1;
+    const sel = selectedClaim === i ? 'selected' : '';
+    const text = c.sentence.replace(/\n/g, ' ');
+    return `<span class="claim ${flagged?'flagged':''} ${sel}" data-i="${i}">${text}</span> `;
+  }).join('');
+  document.querySelectorAll('.claim').forEach(el => {
+    el.addEventListener('click', () => { selectedClaim = +el.dataset.i; renderAll(); });
+  });
+}
+
+function renderPanel(){
+  const ex = DATA[activeIdx];
+  const panel = document.getElementById('panel');
+  if(selectedClaim === null){
+    panel.innerHTML = `<div class="card" style="color:var(--ink-soft); font-size:13px;">Tap any sentence above to see how it was scored - its top retrieved evidence and the detector's confidence.</div>`;
+    return;
+  }
+  const c = ex.claims[selectedClaim];
+  const predFlag = c.pred === 1;
+  const goldFlag = c.gold === 1;
+  const pct = Math.round(c.score*100);
+
+  let agreeHtml = '';
+  if(predFlag && goldFlag){
+    agreeHtml = `<div class="agree">Human annotators agree - <b>correctly caught</b> (${c.types.join(', ')}).</div>`;
+  } else if(!predFlag && goldFlag){
+    agreeHtml = `<div class="agree miss">Human annotators flagged this one, but the detector <b>missed it</b> (${c.types.join(', ')}) - scored below threshold.</div>`;
+  } else if(predFlag && !goldFlag){
+    agreeHtml = `<div class="agree miss">Human annotators consider this <b>fully supported</b> - this is a false alarm.</div>`;
+  } else {
+    agreeHtml = `<div class="agree">Human annotators agree - <b>fully supported</b> by the source.</div>`;
+  }
+
+  panel.innerHTML = `
+    <div class="card">
+      <div class="verdict-row">
+        <span class="badge ${predFlag?'pred-flag':'pred-ok'}">${predFlag?'FLAGGED':'GROUNDED'}</span>
+        <span class="badge gold">gold: ${goldFlag? 'hallucinated':'supported'}</span>
+      </div>
+      <div class="claim-text">"${c.sentence.replace(/\n/g,' ')}"</div>
+      <div class="score-label">hallucination score: ${c.score.toFixed(2)}</div>
+      <div class="score-bar"><div class="score-fill" style="width:${pct}%"></div></div>
+      ${agreeHtml}
+    </div>
+    <div class="card">
+      <div class="evidence-label">TOP RETRIEVED EVIDENCE</div>
+      ${c.evidence.map(e => `<div class="evidence">${e.replace(/\n/g,' ')}</div>`).join('') || '<div class="evidence">No evidence chunk retrieved.</div>'}
+    </div>
+  `;
+}
+
+function renderAll(){
+  renderTabs();
+  renderDoc();
+  renderPanel();
+}
+
+renderStats();
+renderAll();
+</script>
+</body>
+</html>

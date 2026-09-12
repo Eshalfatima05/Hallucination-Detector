@@ -1,0 +1,213 @@
+[
+  {
+    "label": "Weather Q&A",
+    "task_type": "QA",
+    "claims": [
+      {
+        "sentence": "Typical weather in Indiana:\n\nIndianapolis, Indiana experiences a hot, humid climate with long, warm summers and chilly, windy winters.",
+        "gold": 0,
+        "pred": 0,
+        "score": 0.034,
+        "types": [],
+        "evidence": [
+          "Hot, Humid Weather in Indiana",
+          "In Indianapolis, the summers are long, warm, humid, and wet; the winters are chilly and windy; and it is partly cloudy year round."
+        ]
+      },
+      {
+        "sentence": "The temperature ranges from 22\u00b0F to 85\u00b0F throughout the year, with an average annual temperature of 61\u00b0F.",
+        "gold": 1,
+        "pred": 1,
+        "score": 0.41,
+        "types": [
+          "Evident Baseless Info"
+        ],
+        "evidence": [
+          "Over the course of the year, the temperature typically varies from 22\u00b0F to 85\u00b0F and is rarely below 3\u00b0F or above 92\u00b0F.",
+          "passage 2:Average Weather in Indianapolis Indiana, United States."
+        ]
+      },
+      {
+        "sentence": "Precipitation is also common in Indiana, with the wettest year recorded in 1876 at Indianapolis, measuring 57.65 inches of rain.",
+        "gold": 0,
+        "pred": 0,
+        "score": 0.049,
+        "types": [],
+        "evidence": [
+          "passage 3:Wettest year was recorded in 1876 at Indianapolis : 57.65 inches of measured rain.",
+          "1  Driest year was recorded in 1934 at Indianapolis : 24.97 inches of measured rain."
+        ]
+      },
+      {
+        "sentence": "However, the driest year was recorded in 1934, with only 24.97 inches of rain.",
+        "gold": 0,
+        "pred": 0,
+        "score": 0.026,
+        "types": [],
+        "evidence": [
+          "1  Driest year was recorded in 1934 at Indianapolis : 24.97 inches of measured rain.",
+          "passage 3:Wettest year was recorded in 1876 at Indianapolis : 57.65 inches of measured rain."
+        ]
+      }
+    ]
+  },
+  {
+    "label": "Restaurant summary",
+    "task_type": "Data2txt",
+    "claims": [
+      {
+        "sentence": "Pizza Mizza is an Italian restaurant located in Santa Barbara, California, known for its food delivery services.",
+        "gold": 0,
+        "pred": 0,
+        "score": 0.032,
+        "types": [],
+        "evidence": [
+          "categories: Food Delivery Services, Food, Restaurants, Pizza, Italian",
+          "name: Pizza Mizza"
+        ]
+      },
+      {
+        "sentence": "The restaurant offers a variety of pizzas, pastas, salads, and more, with numerous choices and sizes, including gluten-free and cauliflower crust options.",
+        "gold": 0,
+        "pred": 0,
+        "score": 0.041,
+        "types": [],
+        "evidence": [
+          "review_info: [1]  > review_text: This pizza place is pretty average. They have a huge list of different kinds of pizzas, pastas, salads, and more! I recently tried to call an order in to pick up but was told they only do delivery right now so I ended up just doing delivery. I couldn't decide what to order with all of their different choices and sizes! They even have cauliflower and gluten free crust options!",
+          "attributes:  > WiFi: free"
+        ]
+      },
+      {
+        "sentence": "It is open from 11:00 to 21:00 on Mondays and Sundays and has a casual ambiance.",
+        "gold": 0,
+        "pred": 0,
+        "score": 0.156,
+        "types": [],
+        "evidence": [
+          "hours:  > Sunday: 11:0-21:0",
+          "hours:  > Monday: 11:0-21:0"
+        ]
+      },
+      {
+        "sentence": "The restaurant offers free Wi-Fi, outdoor seating, and is good for groups, but does not provide music.",
+        "gold": 1,
+        "pred": 1,
+        "score": 0.248,
+        "types": [
+          "Evident Baseless Info"
+        ],
+        "evidence": [
+          "attributes:  > WiFi: free",
+          "The food is so good that I would've given this place 5 stars but unfortunately, the staff is a big miss. Maybe management should train their staff again or hire people who actually care about their job."
+        ]
+      },
+      {
+        "sentence": "However, the restaurant has a rating of 3.5 stars, with some customers praising the quality of the food, but criticizing the length of time it takes for food to arrive and the level of customer service.",
+        "gold": 0,
+        "pred": 0,
+        "score": 0.065,
+        "types": [],
+        "evidence": [
+          "As for customer service here...",
+          "categories: Food Delivery Services, Food, Restaurants, Pizza, Italian"
+        ]
+      },
+      {
+        "sentence": "The restaurant also offers takeout and has a parking lot, but does not offer street parking, valet, or validated parking.",
+        "gold": 0,
+        "pred": 0,
+        "score": 0.166,
+        "types": [],
+        "evidence": [
+          "attributes:  > BusinessParking:  > street: False",
+          "attributes:  > BusinessParking:  > validated: False"
+        ]
+      }
+    ]
+  },
+  {
+    "label": "News summary",
+    "task_type": "Summary",
+    "claims": [
+      {
+        "sentence": "Boston Marathon bomber Dzhokhar Tsarnaev has been found guilty on all counts and now faces the death penalty.",
+        "gold": 0,
+        "pred": 0,
+        "score": 0.056,
+        "types": [],
+        "evidence": [
+          "Now that he has been found guilty on every count, the jury must decide whether Boston Marathon bomber Tsarnaev, 21, should live or die for what he has done.",
+          "\"This is Dzhokhar Tsarnaev, unconcerned, unrepentant and unchanged,\" Pellegrini said."
+        ]
+      },
+      {
+        "sentence": "During the sentencing phase, the jury heard heart-wrenching testimony from the families of the four people killed in the attack, as well as from those who were injured.",
+        "gold": 0,
+        "pred": 0,
+        "score": 0.049,
+        "types": [],
+        "evidence": [
+          "Tsarnaev saw the people he killed as \"the enemy,\" she said.",
+          "The people who were maimed by Tsarnaev's bombs are also testifying during the sentencing phase of the trial as prosecutors try to show the impact on victims of the attacks."
+        ]
+      },
+      {
+        "sentence": "The victims' families shared stories of their loved ones and the impact their loss has had on their lives.",
+        "gold": 0,
+        "pred": 0,
+        "score": 0.127,
+        "types": [],
+        "evidence": [
+          "To understand the toll Tsarnaev's bombs took, jurors must know the stories of his victims, the prosecutor said.",
+          "\"These young women, this young man and this little boy, all of them were loved and they loved in return,\" Pellegrini said."
+        ]
+      },
+      {
+        "sentence": "Survivors of the bombing also testified, describing the horrific injuries they sustained and the long road to recovery they have faced.",
+        "gold": 0,
+        "pred": 0,
+        "score": 0.17,
+        "types": [],
+        "evidence": [
+          "But on Tuesday, jurors also began to hear about the holes his bombs left in the hearts of the survivors and the families of the dead.",
+          "The stories they told on the witness stand were even more gripping and horrific than the stories told during the guilt phase of Tsarnaev's trial."
+        ]
+      },
+      {
+        "sentence": "Prosecutors presented evidence that Tsarnaev showed no remorse for his actions and referred to the people he killed as \"the enemy.\"",
+        "gold": 0,
+        "pred": 0,
+        "score": 0.074,
+        "types": [],
+        "evidence": [
+          "Tsarnaev saw the people he killed as \"the enemy,\" she said.",
+          "The people who were maimed by Tsarnaev's bombs are also testifying during the sentencing phase of the trial as prosecutors try to show the impact on victims of the attacks."
+        ]
+      },
+      {
+        "sentence": "The defense argues that Tsarnaev's brother, who was also involved in the bombing, was the mastermind behind the attack and that Tsarnaev should not receive the death penalty.",
+        "gold": 1,
+        "pred": 1,
+        "score": 0.278,
+        "types": [
+          "Evident Baseless Info"
+        ],
+        "evidence": [
+          "Opinion: What Tsarnaev deserves.",
+          "Her husband bent over her and told her it was a terrorist attack."
+        ]
+      },
+      {
+        "sentence": "The jury must now decide whether Tsarnaev should be sentenced to death or life in prison without parole.",
+        "gold": 0,
+        "pred": 0,
+        "score": 0.083,
+        "types": [],
+        "evidence": [
+          "\"Can I get on with my life?",
+          "Now that he has been found guilty on every count, the jury must decide whether Boston Marathon bomber Tsarnaev, 21, should live or die for what he has done."
+        ]
+      }
+    ]
+  }
+]
